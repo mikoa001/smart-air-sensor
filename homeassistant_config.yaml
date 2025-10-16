@@ -1,0 +1,128 @@
+# Home Assistant Configuration Example
+# Add this to your configuration.yaml file
+
+mqtt:
+  sensor:
+    # Temperature sensor
+    - name: "Air Quality Temperature"
+      state_topic: "home/sensor/temperature"
+      unit_of_measurement: "°C"
+      device_class: temperature
+      state_class: measurement
+      value_template: "{{ value | float | round(1) }}"
+      
+    # Humidity sensor
+    - name: "Air Quality Humidity"
+      state_topic: "home/sensor/humidity"
+      unit_of_measurement: "%"
+      device_class: humidity
+      state_class: measurement
+      value_template: "{{ value | float | round(1) }}"
+      
+    # CO2 sensor
+    - name: "Air Quality CO2"
+      state_topic: "home/sensor/co2"
+      unit_of_measurement: "ppm"
+      state_class: measurement
+      icon: mdi:molecule-co2
+      value_template: "{{ value | int }}"
+
+  # Device status
+  binary_sensor:
+    - name: "Air Quality Sensor Status"
+      state_topic: "home/sensor/status"
+      payload_on: "online"
+      payload_off: "offline"
+      device_class: connectivity
+
+# Optional: Create template sensors for air quality rating
+template:
+  - sensor:
+      - name: "Air Quality Rating"
+        state: >
+          {% set co2 = states('sensor.air_quality_co2') | int %}
+          {% if co2 < 600 %}
+            Excellent
+          {% elif co2 < 1000 %}
+            Good
+          {% elif co2 < 1500 %}
+            Fair
+          {% elif co2 < 2000 %}
+            Poor
+          {% else %}
+            Very Poor
+          {% endif %}
+        icon: >
+          {% set co2 = states('sensor.air_quality_co2') | int %}
+          {% if co2 < 1000 %}
+            mdi:emoticon-happy
+          {% elif co2 < 2000 %}
+            mdi:emoticon-neutral
+          {% else %}
+            mdi:emoticon-sad
+          {% endif %}
+
+# Optional: Automation examples
+automation:
+  # Alert when CO2 is too high
+  - alias: "High CO2 Alert"
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.air_quality_co2
+        above: 2000
+    action:
+      - service: notify.notify
+        data:
+          title: "Air Quality Alert"
+          message: "CO2 levels are very high ({{ states('sensor.air_quality_co2') }} ppm). Please ventilate the room."
+  
+  # Alert when sensor goes offline
+  - alias: "Sensor Offline Alert"
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.air_quality_sensor_status
+        to: "off"
+        for:
+          minutes: 5
+    action:
+      - service: notify.notify
+        data:
+          title: "Sensor Alert"
+          message: "Air quality sensor has gone offline."
+
+# Lovelace Dashboard Card Example
+# Add this to your dashboard:
+#
+# type: entities
+# title: Air Quality Monitor
+# entities:
+#   - entity: sensor.air_quality_temperature
+#   - entity: sensor.air_quality_humidity
+#   - entity: sensor.air_quality_co2
+#   - entity: sensor.air_quality_rating
+#   - entity: binary_sensor.air_quality_sensor_status
+#
+# Or use a more visual card:
+#
+# type: vertical-stack
+# cards:
+#   - type: glance
+#     title: Air Quality Monitor
+#     entities:
+#       - entity: sensor.air_quality_temperature
+#       - entity: sensor.air_quality_humidity
+#       - entity: sensor.air_quality_co2
+#   - type: gauge
+#     entity: sensor.air_quality_co2
+#     min: 0
+#     max: 3000
+#     severity:
+#       green: 0
+#       yellow: 1000
+#       red: 2000
+#   - type: history-graph
+#     entities:
+#       - sensor.air_quality_temperature
+#       - sensor.air_quality_humidity
+#       - sensor.air_quality_co2
+#     hours_to_show: 24
