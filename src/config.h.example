@@ -1,0 +1,37 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+// WiFi settings
+#define WIFI_SSID "your_wifi_ssid"
+#define WIFI_PASSWORD "your_wifi_password"
+
+// MQTT settings
+#define MQTT_SERVER "192.168.1.100"
+#define MQTT_PORT 1883
+#define MQTT_USER "mqtt_user"
+#define MQTT_PASSWORD "mqtt_password"
+#define MQTT_CLIENT_ID "smart-air-sensor"
+
+// MQTT topics
+#define MQTT_TOPIC_TEMPERATURE "home/sensor/temperature"
+#define MQTT_TOPIC_HUMIDITY "home/sensor/humidity"
+#define MQTT_TOPIC_CO2 "home/sensor/co2"
+#define MQTT_TOPIC_STATUS "home/sensor/status"
+
+// Sensor update interval (milliseconds)
+#define SENSOR_UPDATE_INTERVAL 30000  // 30 seconds
+#define DISPLAY_UPDATE_INTERVAL 2000  // 2 seconds
+
+// Pin definitions
+#define DHT_PIN 2          // GPIO2 (D4 on NodeMCU)
+#define DHT_TYPE DHT22
+#define LED_MATRIX_PIN 14  // GPIO14 (D5 on NodeMCU)
+#define SDA_PIN 4          // GPIO4 (D2 on NodeMCU) for I2C SDA
+#define SCL_PIN 5          // GPIO5 (D1 on NodeMCU) for I2C SCL
+
+// LED Matrix configuration
+#define MATRIX_WIDTH 24    // 3 matrices of 8x8
+#define MATRIX_HEIGHT 8
+#define NUM_MATRICES 3
+
+#endif
