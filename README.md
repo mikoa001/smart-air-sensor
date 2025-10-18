@@ -14,32 +14,32 @@ An ESP8266-based smart air quality monitoring system that measures temperature, 
 ## Hardware Requirements
 
 ### Components
-- **Microcontroller**: ESP8266 (NodeMCU, Wemos D1 Mini, or similar)
+- **Microcontroller**: ESP8266 (NodeMCU, Wemos D1 Mini, or similar Wi-Fi capable MCUs)
 - **Temperature/Humidity Sensor**: AM2302 DHT22
 - **CO2 Sensor**: Sensirion SCD40
-- **Display**: 3x WS2812B 8x8 RGB LED matrices
+- **Display**: 4 pcs WS2812B 8x8 RGB LED matrices
 - **Power**: USB-C connector with 5V power supply
 
 ### Pin Connections
 
 #### ESP8266 Pin Assignments
 ```
-DHT22 Data Pin      -> GPIO2  (D4 on NodeMCU)
-SCD40 SDA           -> GPIO4  (D2 on NodeMCU)
-SCD40 SCL           -> GPIO5  (D1 on NodeMCU)
-LED Matrix Data     -> GPIO14 (D5 on NodeMCU)
+DHT22 Data Pin     -> GPIO2  (D4 on NodeMCU)
+SCD40 SDA          -> GPIO4  (D2 on NodeMCU)
+SCD40 SCL          -> GPIO5  (D1 on NodeMCU)
+LED Matrix Data    -> GPIO14 (D5 on NodeMCU)
 ```
 
 #### DHT22 Wiring
 ```
-VCC  -> 3.3V or 5V
+VCC  -> 3.3V or 5V voltage source
 GND  -> GND
 DATA -> GPIO2 (with 10kΩ pull-up resistor to VCC)
 ```
 
 #### SCD40 Wiring
 ```
-VDD  -> 3.3V
+VDD  -> 3.3V voltage source
 GND  -> GND
 SDA  -> GPIO4
 SCL  -> GPIO5
@@ -52,12 +52,11 @@ GND  -> GND
 DIN  -> GPIO14
 ```
 
-**Note**: Chain the three 8x8 matrices together by connecting DOUT of one matrix to DIN of the next.
+***Note**: Chain the three 8x8 matrices together by connecting DOUT of one matrix to DIN of the next.*
 
 ## Software Requirements
 
 - [PlatformIO](https://platformio.org/) or [Arduino IDE](https://www.arduino.cc/en/software)
-- Arduino framework for ESP8266
 
 ### Required Libraries
 - DHT sensor library (Adafruit)
@@ -70,7 +69,7 @@ DIN  -> GPIO14
 
 ## Installation
 
-### Using PlatformIO (Recommended)
+### Using PlatformIO
 
 1. **Clone the repository**:
    ```bash
@@ -107,7 +106,7 @@ DIN  -> GPIO14
 1. **Install ESP8266 board support**:
    - File → Preferences → Additional Board Manager URLs
    - Add: `http://arduino.esp8266.com/stable/package_esp8266com_index.json`
-   - Tools → Board → Board Manager → Search "ESP8266" and install
+   - Tools → Board → Board Manager → Search "ESP8266 Boards" and install
 
 2. **Install required libraries**:
    - Sketch → Include Library → Manage Libraries
@@ -120,7 +119,7 @@ DIN  -> GPIO14
 4. **Configure settings** as described above
 
 5. **Select your board**:
-   - Tools → Board → ESP8266 Boards → Select your board (e.g., NodeMCU 1.0)
+   - Tools → Board → ESP8266 Boards → Generic ESP8266 Module
 
 6. **Upload the sketch**
 
@@ -176,27 +175,6 @@ mqtt:
 
 Restart Home Assistant after adding the configuration.
 
-## Troubleshooting
-
-### WiFi Connection Issues
-- Verify SSID and password in `config.h`
-- Check WiFi signal strength
-- Ensure 2.4GHz WiFi is enabled (ESP8266 doesn't support 5GHz)
-
-### Sensor Reading Failures
-- **DHT22**: Check connections and pull-up resistor (10kΩ)
-- **SCD40**: Verify I2C connections (SDA/SCL), check I2C address with scanner
-
-### MQTT Connection Issues
-- Verify MQTT broker is running
-- Check IP address, port, username, and password
-- Ensure firewall allows MQTT traffic (port 1883)
-
-### LED Matrix Issues
-- Check power supply (matrices can draw significant current)
-- Verify data line connection
-- Ensure matrices are chained correctly
-
 ## Serial Monitor Output
 
 Example output:
@@ -223,10 +201,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## Acknowledgments
-
-- Adafruit for excellent sensor libraries
-- SparkFun for SCD4x support
-- PlatformIO for streamlined development
+Contributions are welcome! Please feel free to submit a Pull Request and I will reveiw it within 1-2 weeks.
