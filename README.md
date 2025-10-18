@@ -56,7 +56,7 @@ DIN  -> GPIO14
 
 ## Software Requirements
 
-- [PlatformIO](https://platformio.org/) or [Arduino IDE](https://www.arduino.cc/en/software)
+- [PlatformIO on VS Code](https://platformio.org/) or [Arduino IDE](https://www.arduino.cc/en/software)
 
 ### Required Libraries
 - DHT sensor library (Adafruit)
